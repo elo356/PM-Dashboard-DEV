@@ -1,0 +1,961 @@
+/* MetricsTable.css */
+
+/* Wrapper scroll (desktop) */
+.mtWrap {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-strong);
+  backdrop-filter: blur(8px);
+}
+
+/* Table */
+.mtTable {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+}
+
+/* Cells minimal */
+.mtTable th,
+.mtTable td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--table-cell-border);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.mtTable tbody tr { height: 32px; }
+.mtTable tbody tr:hover td { background: rgba(255, 255, 255, 0.04); }
+
+/* Sticky header */
+.mtTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--table-head-bg);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Sticky left columns */
+.mtTable thead th:nth-child(1),
+.mtTable tbody td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 30;
+  background: var(--table-sticky-bg);
+  border-right: 1px solid var(--table-sticky-border);
+
+  width: 72px;
+  min-width: 72px;
+  max-width: 72px;
+}
+
+.mtTable thead th:nth-child(2),
+.mtTable tbody td:nth-child(2) {
+  position: sticky;
+  left: 72px;
+  z-index: 30;
+  background: var(--table-sticky-bg);
+  border-right: 1px solid var(--table-sticky-border);
+
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.mtTable thead th:nth-child(1),
+.mtTable thead th:nth-child(2) { z-index: 40; }
+
+/* Header layout */
+.thInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 70px; /* reserve space for icons */
+  min-height: 26px;
+}
+
+.thActions {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.thLabel {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  opacity: 0.92;
+
+  flex: 1;
+  min-width: 0;
+
+  /* allow wrapping instead of ellipsis */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+
+  line-height: 1.15;
+}
+
+.thActive { background: rgba(255,255,255,0.06) !important; }
+.thActive .thLabel { opacity: 1; }
+
+.sortBadge {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Icon buttons */
+.iconBtn {
+  width: 28px;
+  height: 24px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.86);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.iconBtn:hover {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
+  transform: translateY(-0.5px);
+}
+.iconBtn.isOn { border-color: rgba(255, 183, 165, 0.55); }
+.iconBtn.isOpen { outline: 2px solid rgba(99,102,241,0.28); }
+
+/* Portal menu card */
+.menuCard {
+  background: rgba(22, 24, 34, 0.98);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  padding: 10px;
+
+  transform-origin: top left;
+  animation: popIn 120ms ease-out;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0px) scale(1); }
+}
+
+.menuTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.menuTitle { font-size: 12px; opacity: 0.92; }
+
+.linkBtn {
+  border: 0;
+  background: transparent;
+  color: rgba(164, 214, 255, 0.95);
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.menuItem {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+}
+.menuItem:hover { background: rgba(255, 255, 255, 0.06); }
+.menuItem.isSelected { background: rgba(255, 255, 255, 0.10); }
+
+.menuSearch {
+  width: 100%;
+  border-radius: 12px;
+  padding: 9px 10px;
+  border: 1px solid var(--border-soft);
+  background: rgba(10, 16, 40, 0.55);
+  color: #fff;
+  outline: none;
+}
+.menuSearch:focus { border-color: rgba(255, 183, 165, 0.70); }
+
+.menuHint { margin-top: 8px; font-size: 12px; opacity: 0.75; }
+
+/* Regime filter pills */
+.pillRow { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  border-radius: 999px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.86);
+  cursor: pointer;
+  font-size: 12px;
+}
+.pill.isOn {
+  border-color: rgba(99,102,241,0.45);
+  background: rgba(99,102,241,0.12);
+}
+
+.cellWrap {
+  position: relative;
+  display: block;
+  line-height: 1.1;
+  padding-bottom: 10px;
+}
+
+.cellContent {
+  position: relative;
+  z-index: 2;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1px;
+}
+
+/* text colors */
+.cellWrap.isPos .cellContent { color: rgba(164, 214, 255, 0.95); }
+.cellWrap.isNeg .cellContent { color: rgba(255, 170, 198, 0.95); }
+.cellWrap.isZero .cellContent { color: rgba(230, 230, 255, 0.78); }
+.cellWrap.isNA .cellContent { color: rgba(255, 255, 255, 0.45); }
+
+/* regime colors */
+.cellWrap.bullish .cellContent { color: rgba(120, 200, 255, 0.95); }
+.cellWrap.bearish .cellContent { color: rgba(255, 150, 180, 0.95); }
+.cellWrap.neutral .cellContent { color: rgba(220, 220, 255, 0.80); }
+
+.barTrack {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 70%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.barFill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 180ms ease;
+}
+.cellWrap.isPos .barFill { background: rgba(164, 214, 255, 0.55); }
+.cellWrap.isNeg .barFill { background: rgba(255, 170, 198, 0.55); }
+.cellWrap.isZero .barFill { background: rgba(230, 230, 255, 0.25); }
+.cellWrap.isNA .barFill { background: rgba(255, 255, 255, 0.12); }
+
+/* nicer scrollbars */
+.mtWrap::-webkit-scrollbar { height: 10px; width: 10px; }
+.mtWrap::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0.25);
+}
+.mtWrap::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+/* Force light visuals for sticky headers/columns */
+[data-theme="light"] .mtTable thead th {
+  background: rgba(48, 65, 112, 0.96) !important;
+  color: rgba(238, 244, 255, 0.95);
+}
+
+[data-theme="light"] .mtTable thead th:nth-child(1),
+[data-theme="light"] .mtTable tbody td:nth-child(1),
+[data-theme="light"] .mtTable thead th:nth-child(2),
+[data-theme="light"] .mtTable tbody td:nth-child(2) {
+  background: rgba(43, 59, 104, 0.96) !important;
+  color: rgba(238, 244, 255, 0.95);
+  border-right: 1px solid rgba(126, 154, 214, 0.25);
+}
+
+[data-theme="light"] .mtTable tbody td:nth-child(1) .cellContent,
+[data-theme="light"] .mtTable tbody td:nth-child(2) .cellContent,
+[data-theme="light"] .mtTable tbody td:nth-child(2) .symTxt {
+  color: rgba(238, 244, 255, 0.95) !important;
+}
+
+[data-theme="light"] .thLabel,
+[data-theme="light"] .sortBadge {
+  color: rgba(238, 244, 255, 0.95);
+}
+
+[data-theme="light"] .thActive {
+  background: rgba(126, 154, 214, 0.2) !important;
+}
+
+[data-theme="light"] .iconBtn {
+  color: rgba(238, 244, 255, 0.95);
+  border-color: rgba(126, 154, 214, 0.35);
+  background: rgba(61, 82, 139, 0.55);
+}
+
+[data-theme="light"] .symInfoBtn {
+  color: rgba(238, 244, 255, 0.95);
+  border-color: rgba(126, 154, 214, 0.35);
+  background: rgba(61, 82, 139, 0.55);
+}
+
+/* Symbol info UI */
+.symCell{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+.symTxt{
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.symInfoBtn{
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.80);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.symInfoBtn:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
+  transform: translateY(-0.5px);
+}
+
+.rankStatus{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  line-height: 1;
+}
+
+.rankStatus--up{
+  color: rgba(103, 170, 255, 0.98);
+}
+
+.rankStatus--down{
+  color: rgba(255, 154, 190, 0.98);
+}
+
+.rankStatus--flat{
+  color: var(--text-muted);
+}
+
+.rankStatus__icon{
+  width: 22px;
+  height: 22px;
+  display: block;
+  fill: currentColor;
+}
+
+.rankStatus--up .rankStatus__icon{
+  transform: rotate(-90deg);
+}
+
+.rankStatus--down .rankStatus__icon{
+  transform: rotate(90deg);
+}
+
+.rankStatus__flat{
+  font-size: 20px;
+  font-weight: 900;
+  transform: translateY(-1px);
+}
+
+/* popover card */
+.infoCard{
+  background: rgba(22, 24, 34, 0.98);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  padding: 12px;
+
+  transform-origin: top left;
+  animation: popIn 120ms ease-out;
+}
+
+.infoTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.infoSym{
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  font-size: 14px;
+}
+.infoClose{
+  width: 28px;
+  height: 26px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.86);
+  cursor: pointer;
+}
+.infoClose:hover{
+  background: rgba(255,255,255,0.10);
+}
+
+.infoName{
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 10px;
+  white-space: normal;
+}
+
+.infoRow{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.infoK{
+  color: rgba(255,255,255,0.60);
+  min-width: 70px;
+}
+.infoV{
+  color: rgba(255,255,255,0.86);
+  text-align: right;
+  white-space: normal;
+}
+
+.infoPill{
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  font-size: 11px;
+}
+
+.infoHint{
+  margin-top: 10px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+}
+
+/* =========================
+   MOBILE: table -> cards (ROBUST)
+   ========================= */
+@media (max-width: 9999px) {
+  /* wrapper */
+  .mtWrap{
+    height: auto;
+    overflow: visible;
+    border-radius: 16px;
+  }
+
+  /* IMPORTANT: stop using table layout on mobile */
+  .mtTable{
+    width: 100%;
+    min-width: 0;
+    display: block;
+    border-spacing: 0;
+  }
+
+  .mtTable thead{
+    display: none;
+  }
+
+  .mtTable tbody{
+    display: block;
+    padding: 10px;
+  }
+
+  /* each row becomes a card */
+  .mtTable tbody tr{
+    display: block;
+    height: auto;
+    margin: 0 0 12px 0;
+
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(12,14,24,.55);
+    backdrop-filter: blur(12px);
+  }
+
+  /* cells become label/value rows */
+  .mtTable tbody td{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    white-space: normal;
+  }
+
+  .mtTable tbody td:last-child{
+    border-bottom: 0;
+  }
+
+  .mtTable tbody td::before{
+    content: attr(data-label);
+    font-size: 12px;
+    opacity: 0.70;
+    flex: 0 0 auto;
+
+    max-width: 62%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+
+    line-height: 1.15;
+  }
+
+  /* value area aligned right */
+  .cellWrap{
+    padding-bottom: 0;
+  }
+  .cellContent{
+    text-align: right;
+  }
+
+  /* bars look better in cards */
+  .barTrack{
+    position: relative;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    margin-top: 6px;
+  }
+
+  /* disable sticky stuff completely on mobile */
+  .mtTable thead th:nth-child(1),
+  .mtTable tbody td:nth-child(1),
+  .mtTable thead th:nth-child(2),
+  .mtTable tbody td:nth-child(2){
+    position: static !important;
+    left: auto !important;
+    z-index: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    border-right: 0 !important;
+    background: transparent !important;
+  }
+
+  /* optional: highlight Symbol row */
+  .mtTable tbody td[data-label="Symbol"] .symTxt{
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  /* prevent popovers from overflowing */
+  .infoCard, .menuCard{
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* =========================
+   UPDATED: Always-visible compact filter bar
+   ========================= */
+.mtMobileControls { display: none; }
+
+@media (max-width: 9999px) {
+  .mtMobileControls{
+    display: grid;
+    gap: 6px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg-accent-end);
+    backdrop-filter: none;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .mtMobileRow{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mtMobileSearchWrap{
+    position: relative;
+    flex: 0 0 clamp(180px, 28vw, 290px);
+    width: clamp(180px, 28vw, 290px);
+    min-width: 180px;
+  }
+
+  .mtMobileSearch{
+    /* UPDATED: avoid oversized search box */
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    border-radius: 12px;
+    padding: 9px 64px 9px 12px;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-accent-start);
+    color: var(--control-text);
+    outline: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .mtMobileSearch:focus{
+    border-color: rgba(255, 183, 165, 0.70);
+  }
+
+  .mtMobileClear{
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    padding: 4px 8px;
+    border: 0;
+    background: rgba(255,255,255,0.08);
+    color: var(--text-main);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .mtMobileClear:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .mtFilterBar{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mtFilterBtn{
+    border-radius: 999px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-accent-start);
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .mtFilterBtn.isOn{
+    border-color: rgba(99,102,241,0.45);
+    background: rgba(99,102,241,0.12);
+  }
+
+  .mtMobileHint{
+    font-size: 12px;
+    opacity: 0.75;
+  }
+
+  .mtStaticFilterRow{
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .mtStaticFilterBtn{
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    border-radius: 999px;
+    padding: 7px 10px;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-accent-start);
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 850;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-sizing: border-box;
+  }
+
+  .mtStaticFilterLabel{
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.1;
+    max-width: 100%;
+  }
+
+  .mtStaticFilterBtn:hover{
+    border-color: rgba(255,255,255,0.24);
+    background: rgba(255,255,255,0.10);
+  }
+
+  .mtStaticFilterBtn.isOn{
+    border-color: rgba(99,102,241,0.45);
+    background: rgba(99,102,241,0.12);
+  }
+
+  .mtStaticFilterIcon{
+    opacity: 0.78;
+    font-size: 11px;
+    margin-left: 0;
+    flex: 0 0 auto;
+    transform: translateY(-0.2px);
+  }
+
+  /* extra: keep space above cards tidy */
+  .mtTable tbody{
+    padding-top: 12px;
+  }
+}
+
+@media (max-width: 820px) {
+  .mtMobileRow{
+    width: 100%;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .mtMobileSearchWrap{
+    flex: 0 0 clamp(150px, 42vw, 220px);
+    width: clamp(150px, 42vw, 220px);
+    min-width: 150px;
+  }
+
+  .mtStaticFilterRow{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+    min-width: 0;
+  }
+
+  .mtStaticFilterBtn{
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: none;
+    width: auto;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .mtStaticFilterIcon{
+    font-size: 11px;
+    opacity: 0.72;
+    margin-left: 1px;
+  }
+}
+/* =========================
+   Clickable rows (desktop + mobile)
+   ========================= */
+
+.mtRowClickable {
+  cursor: pointer;
+}
+
+/* Desktop hover: un glow sutil */
+@media (min-width: 821px) {
+  .mtWrap {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .mtTable {
+    display: block;
+    min-width: 0;
+  }
+
+  .mtTable thead { display: none; }
+
+  .mtTable tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+
+  @media (min-width: 1120px) {
+    .mtTable tbody {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .mtTable tbody {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1720px) {
+    .mtTable tbody {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 2100px) {
+    .mtTable tbody {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .mtTable tbody tr {
+    display: block;
+    height: auto;
+    margin: 0;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(12,14,24,.55);
+    backdrop-filter: blur(12px);
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .mtTable tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    white-space: normal;
+  }
+
+  .mtTable tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  .mtTable tbody td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    opacity: 0.7;
+    flex: 0 0 auto;
+    max-width: 62%;
+    line-height: 1.15;
+  }
+
+  .cellWrap {
+    padding-bottom: 0;
+  }
+
+  .cellContent {
+    text-align: right;
+  }
+
+  .barTrack {
+    position: relative;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    margin-top: 6px;
+  }
+
+  .mtTable tbody td:nth-child(1),
+  .mtTable tbody td:nth-child(2) {
+    position: static !important;
+    left: auto !important;
+    z-index: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    border-right: 0 !important;
+    background: transparent !important;
+  }
+
+  .mtTable tbody tr.mtRowClickable:hover {
+    transform: translateY(-1px);
+    border-color: rgba(99,102,241,0.35);
+    background: rgba(99,102,241,0.08);
+  }
+
+  .mtTable tbody tr.mtRowClickable:hover td {
+    background: rgba(99, 102, 241, 0.04);
+  }
+
+  .mtTable tbody tr.mtRowClickable:focus-within {
+    outline: 2px solid rgba(99, 102, 241, 0.28);
+    outline-offset: 0;
+  }
+
+  .mtTable tbody tr.mtRowClickable:focus-within td {
+    outline: 2px solid rgba(99, 102, 241, 0.22);
+    outline-offset: -2px;
+  }
+}
+
+/* Mobile card hover/active: se siente tappable */
+@media (max-width: 820px) {
+  .mtTable tbody tr.mtRowClickable {
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .mtTable tbody tr.mtRowClickable:active {
+    transform: scale(0.995);
+    border-color: rgba(99,102,241,0.35);
+    background: rgba(99,102,241,0.06);
+  }
+}
+
+/* Optional: show a subtle "→" hint on Symbol row in mobile cards */
+@media (max-width: 820px) {
+  .mtTable tbody tr.mtRowClickable td[data-label="Symbol"] .symCell::after {
+    content: "›";
+    opacity: 0.55;
+    margin-left: 8px;
+    font-size: 18px;
+    line-height: 1;
+  }
+}

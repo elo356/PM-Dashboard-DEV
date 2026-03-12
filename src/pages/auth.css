@@ -1,0 +1,215 @@
+.authPage {
+  min-height: var(--app-content-height);
+  display: grid;
+  place-items: center;
+  padding: 28px 16px;
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(224, 122, 140, 0.22), transparent 55%),
+    radial-gradient(900px 500px at 85% 15%, rgba(255, 183, 165, 0.16), transparent 60%),
+    var(--bg-main);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+.authPage,
+.authPage * {
+  box-sizing: border-box;
+}
+
+.authCard {
+  width: min(420px, 100%);
+  background: linear-gradient(
+    180deg,
+    var(--surface-card-grad-start),
+    var(--surface-card-grad-end)
+  );
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+
+  overflow: hidden;
+}
+
+.authField { min-width: 0; }
+.authInput { min-width: 0; }
+
+.authBrand {
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  color: var(--brand-accent);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.authBrandLogo {
+  width: 140px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.authTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.authTitle {
+  margin: 0 0 14px;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.authMsg {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  font-size: 13px;
+}
+
+.authMsg--error {
+  background: rgba(255, 90, 110, 0.14);
+  border-color: rgba(255, 90, 110, 0.22);
+  color: #ffd7de;
+}
+
+.authMsg--ok {
+  background: rgba(80, 200, 120, 0.14);
+  border-color: rgba(80, 200, 120, 0.22);
+  color: #d9ffe9;
+}
+
+.authForm {
+  display: grid;
+  gap: 12px;
+}
+
+.authField label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 0 0 6px;
+}
+
+.authInput {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: linear-gradient(180deg, rgba(11, 20, 44, 0.82), rgba(8, 14, 34, 0.82));
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.authInput::placeholder {
+  color: rgba(230, 228, 240, 0.6);
+}
+
+.authInput:focus {
+  border-color: rgba(153, 225, 255, 0.78);
+  box-shadow: 0 0 0 3px rgba(120, 205, 245, 0.14);
+  background: linear-gradient(180deg, rgba(12, 23, 49, 0.9), rgba(9, 17, 39, 0.9));
+}
+
+.authActions {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.authBtnPrimary {
+  background: linear-gradient(135deg, var(--btn-primary-grad-start), var(--btn-primary-grad-end));
+  color: var(--btn-primary-text);
+  border: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 900;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.authBtnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(224, 122, 140, 0.35);
+}
+
+.authBtnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.authBtnGhost {
+  background: var(--btn-ghost-bg);
+  color: var(--brand-accent);
+  border: 1px solid var(--btn-ghost-border);
+  padding: 12px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.authBtnGhost:hover {
+  background: var(--btn-ghost-hover);
+  transform: translateY(-1px);
+}
+
+.authFooter {
+  margin-top: 14px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.authFooter a {
+  color: var(--brand-accent);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.authFooter a:hover {
+  text-decoration: underline;
+}
+
+.authLegalCheck {
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: 0.95;
+}
+
+.authLegalCheck input {
+  margin-top: 2px;
+}
+
+.authInlineLink {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--brand-accent);
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.authSigninNote {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* Mobile spacing */
+@media (max-width: 420px) {
+  .authCard {
+    padding: 18px;
+    border-radius: 18px;
+  }
+}

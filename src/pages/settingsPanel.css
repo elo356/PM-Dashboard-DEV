@@ -1,0 +1,180 @@
+.settingsCard{
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-subtle);
+}
+
+.settingsTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.settingsTitle{
+  margin:0;
+  font-size:18px;
+}
+
+.settingsSubtitle{
+  margin: 6px 0 0;
+  opacity: 0.78;
+  font-size: 13px;
+}
+
+.settingsChips{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.settingsBanner{
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-subtle);
+  font-size: 13px;
+}
+.settingsBanner.is-error{
+  border-color: rgba(239,68,68,.25);
+  background: rgba(239,68,68,.10);
+}
+.settingsBanner.is-ok{
+  border-color: rgba(34,197,94,.25);
+  background: rgba(34,197,94,.10);
+}
+
+.settingsSection{
+  margin-top: 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  padding: 14px;
+}
+
+.settingsSectionHead{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+.settingsSectionHead h3{
+  margin:0;
+  font-size:14px;
+  opacity:.95;
+}
+.settingsSectionHead span{
+  font-size:12px;
+  opacity:.7;
+}
+
+.settingsH3{
+  margin:0;
+  font-size:14px;
+  opacity:.95;
+}
+
+.settingsBillingRow{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  font-size:13px;
+  opacity:.85;
+}
+
+.settingsActions{
+  margin-top: 12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.settingsStack {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 480px;
+}
+
+.settingsField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settingsLabel {
+  font-size: 12px;
+  opacity: 0.75;
+  letter-spacing: 0.3px;
+}
+
+.inputModern {
+  width: 90%;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  background: rgba(8, 10, 20, 0.65);
+  color: var(--text-main);
+  font-size: 13px;
+  transition: all 160ms ease;
+}
+
+.inputModern:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.inputModern:focus {
+  border-color: rgba(255, 183, 165, 0.85);
+  box-shadow: 0 0 0 4px rgba(255, 183, 165, 0.14);
+  outline: none;
+}
+
+.btnGhost {
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.btnGhost:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.btnDanger {
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.14);
+  color: rgba(255,255,255,.95);
+  cursor: pointer;
+}
+
+.btnDanger:hover {
+  background: rgba(239, 68, 68, 0.22);
+}
+
+.settingsDanger{
+  margin-top: 12px;
+  border: 1px solid rgba(239,68,68,.20);
+  border-radius: 14px;
+  background: rgba(239,68,68,.06);
+  padding: 14px;
+}
+.settingsDanger h3{
+  margin:0;
+  font-size:14px;
+  opacity:.95;
+}
+.settingsDanger p{
+  margin: 8px 0 0;
+  font-size: 13px;
+  opacity: 0.82;
+}
