@@ -309,6 +309,7 @@ export default function ChartGLMetrics({
 
   const [data, setData] = useState(null);
   const [yZoom, setYZoom] = useState(1);
+  const [yPanOffset, setYPanOffset] = useState(0);
 
   const anchoredRef = useRef({ key: null, did: false });
   const dragRef = useRef(null);
@@ -337,7 +338,13 @@ export default function ChartGLMetrics({
   }, [autoRefreshMs]);
 
   useKeyboardShortcuts({
-    onReset: resetViewport,
+    onReset: () => {
+      resetViewport();
+      setYZoom(1);
+      setYPanOffset(0);
+      setLiveFollow(true);
+      setHover(null);
+    },
     onUndo: undo,
     onRedo: redo,
     canUndo,
@@ -377,6 +384,7 @@ export default function ChartGLMetrics({
 
   useEffect(() => {
     setYZoom(1);
+    setYPanOffset(0);
     anchoredRef.current = { key: `${symbol}|${tf}`, did: false };
     setLiveFollow(true);
   }, [symbol, tf]);
@@ -393,6 +401,14 @@ export default function ChartGLMetrics({
     setLiveFollow(true);
     setHover(null);
   }, [data, viewport.fromMs, viewport.toMs, setViewport]);
+
+  const resetViewAll = useCallback(() => {
+    resetViewport();
+    setYZoom(1);
+    setYPanOffset(0);
+    setLiveFollow(true);
+    setHover(null);
+  }, [resetViewport]);
 
   useEffect(() => {
     if (!apiBase || !symbol || !tf) return;
@@ -497,8 +513,8 @@ export default function ChartGLMetrics({
   const yRange = useMemo(() => {
     const c = (yRangeRaw.y0 + yRangeRaw.y1) * 0.5;
     const half = Math.max(1e-9, (yRangeRaw.y1 - yRangeRaw.y0) * 0.5 * yZoom);
-    return { y0: c - half, y1: c + half };
-  }, [yRangeRaw.y0, yRangeRaw.y1, yZoom]);
+    return { y0: c - half + yPanOffset, y1: c + half + yPanOffset };
+  }, [yRangeRaw.y0, yRangeRaw.y1, yZoom, yPanOffset]);
 
   const xTickMs = useMemo(() => {
     if (!data?.t) return [];
@@ -694,11 +710,15 @@ export default function ChartGLMetrics({
       dragRef.current = {
         mode: "pan",
         startX: e.clientX - rect.left,
+        startY: e.clientY - rect.top,
         startFrom: viewport.fromMs,
         startTo: viewport.toMs,
+        startYPanOffset: yPanOffset,
+        startY0: yRange.y0,
+        startY1: yRange.y1,
       };
     },
-    [viewport.fromMs, viewport.toMs]
+    [viewport.fromMs, viewport.toMs, yPanOffset, yRange.y0, yRange.y1]
   );
 
   const onYAxisPointerDown = useCallback(
@@ -766,11 +786,15 @@ export default function ChartGLMetrics({
 
       if (dragRef.current?.mode === "pan") {
         const dx = xPx - dragRef.current.startX;
+        const dy = yPx - dragRef.current.startY;
         const deltaMs = dx * msPerPx;
+        const spanYData = Math.max(1e-9, dragRef.current.startY1 - dragRef.current.startY0);
+        const deltaYValue = dy * (spanYData / Math.max(1, rect.height));
         setViewport({
           fromMs: dragRef.current.startFrom - deltaMs,
           toMs: dragRef.current.startTo - deltaMs,
         });
+        setYPanOffset(dragRef.current.startYPanOffset + deltaYValue);
         return;
       }
 
@@ -796,10 +820,51 @@ export default function ChartGLMetrics({
       const tt = tArr[bestI];
       const flowV = data.flow ? data.flow[bestI] : null;
       const trendV = data.trend ? data.trend[bestI] : null;
+
+      const preferredSeries =
+        showFlow && data.flow
+          ? data.flow
+          : showMom && data.trend
+            ? data.trend
+            : data.flow || data.trend;
+
+      const interpolateSeriesAtTime = (values, tMs) => {
+        if (!values || n < 1) return null;
+        if (n === 1) return isFiniteNum(values[0]) ? values[0] : null;
+
+        let left = 0;
+        let right = n - 1;
+
+        while (left <= right) {
+          const mid = (left + right) >> 1;
+          const tm = tArr[mid];
+          if (tm < tMs) left = mid + 1;
+          else right = mid - 1;
+        }
+
+        const i1 = clamp(left, 0, n - 1);
+        const i0b = clamp(i1 - 1, 0, n - 1);
+        const t0 = tArr[i0b];
+        const t1 = tArr[i1];
+        const v0 = values[i0b];
+        const v1 = values[i1];
+
+        if (isFiniteNum(v0) && isFiniteNum(v1) && t1 !== t0) {
+          const uT = (tMs - t0) / (t1 - t0);
+          return v0 + (v1 - v0) * clamp(uT, 0, 1);
+        }
+
+        if (isFiniteNum(v0)) return v0;
+        if (isFiniteNum(v1)) return v1;
+        return null;
+      };
+
+      const lineY = interpolateSeriesAtTime(preferredSeries, tAtCursor);
       const mouseNdcX = (xPx / Math.max(1, rect.width)) * 2 - 1;
       const mouseNdcY = 1 - (yPx / Math.max(1, rect.height)) * 2;
       const pointNdcX = mouseNdcX;
-      const pointNdcY = mouseNdcY;
+      const spanY = Math.max(1e-9, yRange.y1 - yRange.y0);
+      const pointNdcY = lineY == null ? mouseNdcY : ((lineY - yRange.y0) / spanY) * 2 - 1;
 
       setHover({
         xPx,
@@ -975,7 +1040,7 @@ export default function ChartGLMetrics({
             ↷
           </button>
           <button
-            onClick={resetViewport}
+            onClick={resetViewAll}
             style={{
               padding: "6px 10px",
               background: "rgba(0,0,0,.5)",
