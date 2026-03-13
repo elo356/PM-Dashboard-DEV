@@ -320,6 +320,7 @@ export default function ChartGLMetrics({
   const [refreshTick, setRefreshTick] = useState(0);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [liveFollow, setLiveFollow] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   const { viewport, setViewport, resetViewport, undo, redo, canUndo, canRedo } = useViewport({ symbol, tf });
 
@@ -380,6 +381,22 @@ export default function ChartGLMetrics({
       } catch {}
       reglRef.current = null;
     };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+
+    const mq = window.matchMedia("(max-width: 820px)");
+    const apply = () => setIsMobileView(!!mq.matches);
+    apply();
+
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", apply);
+      return () => mq.removeEventListener("change", apply);
+    }
+
+    mq.addListener(apply);
+    return () => mq.removeListener(apply);
   }, []);
 
   useEffect(() => {
@@ -912,6 +929,7 @@ export default function ChartGLMetrics({
         borderRadius: 14,
         overflow: "hidden",
         userSelect: "none",
+        touchAction: isMobileView ? "none" : "auto",
       }}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -1290,7 +1308,7 @@ export default function ChartGLMetrics({
       <div style={{ position: "absolute", left: CONFIG.AXIS_LEFT_W, right: 0, top: 0, bottom: CONFIG.AXIS_BOTTOM_H }}>
         <canvas
           ref={canvasRef}
-          style={{ width: "100%", height: "100%", display: "block" }}
+          style={{ width: "100%", height: "100%", display: "block", touchAction: isMobileView ? "none" : "auto" }}
           onWheel={onWheel}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
