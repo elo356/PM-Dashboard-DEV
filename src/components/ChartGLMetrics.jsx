@@ -318,6 +318,7 @@ export default function ChartGLMetrics({
   const [hover, setHover] = useState(null);
   const [refreshTick, setRefreshTick] = useState(0);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [liveFollow, setLiveFollow] = useState(true);
 
   const { viewport, setViewport, resetViewport, undo, redo, canUndo, canRedo } = useViewport({ symbol, tf });
 
@@ -377,7 +378,21 @@ export default function ChartGLMetrics({
   useEffect(() => {
     setYZoom(1);
     anchoredRef.current = { key: `${symbol}|${tf}`, did: false };
+    setLiveFollow(true);
   }, [symbol, tf]);
+
+  const calibrateCenter = useCallback(() => {
+    if (!data?.t?.length) return;
+    const lastKey = Number(data.lastKey ?? data.t[data.t.length - 1]);
+    if (!Number.isFinite(lastKey)) return;
+
+    const span = Math.max(1, viewport.toMs - viewport.fromMs);
+    const half = span / 2;
+
+    setViewport({ fromMs: lastKey - half, toMs: lastKey + half });
+    setLiveFollow(true);
+    setHover(null);
+  }, [data, viewport.fromMs, viewport.toMs, setViewport]);
 
   useEffect(() => {
     if (!apiBase || !symbol || !tf) return;
@@ -427,21 +442,28 @@ export default function ChartGLMetrics({
         setMeta(j);
         setData({ t, flow, trend, lastKey });
 
-        const myKey = `${symbol}|${tf}`;
-        if (anchoredRef.current.key !== myKey) {
-          anchoredRef.current = { key: myKey, did: false };
-        }
+        if (Number.isFinite(lastKey)) {
+          const myKey = `${symbol}|${tf}`;
+          if (anchoredRef.current.key !== myKey) {
+            anchoredRef.current = { key: myKey, did: false };
+          }
 
-        if (!anchoredRef.current.did && Number.isFinite(lastKey)) {
-          const span = defaultWindowMs(tf);
-          setViewport((vp) => {
-            if (vp.toMs > lastKey + 60_000) {
+          if (!anchoredRef.current.did) {
+            const span = defaultWindowMs(tf);
+            setViewport((vp) => {
+              if (vp.toMs > lastKey + 60_000) {
+                anchoredRef.current.did = true;
+                return { fromMs: lastKey - span, toMs: lastKey };
+              }
               anchoredRef.current.did = true;
+              return vp;
+            });
+          } else if (liveFollow) {
+            setViewport((vp) => {
+              const span = Math.max(1, vp.toMs - vp.fromMs);
               return { fromMs: lastKey - span, toMs: lastKey };
-            }
-            anchoredRef.current.did = true;
-            return vp;
-          });
+            });
+          }
         }
       } catch (e) {
         if (String(e?.name) === "AbortError") return;
@@ -457,7 +479,7 @@ export default function ChartGLMetrics({
         ctrl.abort();
       } catch {}
     };
-  }, [apiBase, symbol, tf, barsNeeded, refreshTick, setViewport]);
+  }, [apiBase, symbol, tf, barsNeeded, refreshTick, setViewport, liveFollow]);
 
   const seriesList = useMemo(() => {
     if (!data) return [];
@@ -630,6 +652,7 @@ export default function ChartGLMetrics({
     (e) => {
       if (!data) return;
       e.preventDefault();
+      setLiveFollow(false);
 
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -664,6 +687,7 @@ export default function ChartGLMetrics({
       const canvas = canvasRef.current;
       if (!canvas) return;
       e.preventDefault();
+      setLiveFollow(false);
       canvas.setPointerCapture?.(e.pointerId);
 
       const rect = canvas.getBoundingClientRect();
@@ -680,6 +704,7 @@ export default function ChartGLMetrics({
   const onYAxisPointerDown = useCallback(
     (e) => {
       e.preventDefault();
+      setLiveFollow(false);
       e.currentTarget.setPointerCapture?.(e.pointerId);
       dragRef.current = {
         mode: "yscale",
@@ -695,6 +720,7 @@ export default function ChartGLMetrics({
       const root = rootRef.current;
       if (!root) return;
       e.preventDefault();
+      setLiveFollow(false);
       e.currentTarget.setPointerCapture?.(e.pointerId);
       const rect = root.getBoundingClientRect();
       const plotW = Math.max(1, rect.width - CONFIG.AXIS_LEFT_W);
@@ -770,29 +796,10 @@ export default function ChartGLMetrics({
       const tt = tArr[bestI];
       const flowV = data.flow ? data.flow[bestI] : null;
       const trendV = data.trend ? data.trend[bestI] : null;
-
-      let chosenY = null;
-      let chosenKind = null;
-
-      if (showFlow && isFiniteNum(flowV)) {
-        chosenY = flowV;
-        chosenKind = "flow";
-      } else if (showMom && isFiniteNum(trendV)) {
-        chosenY = trendV;
-        chosenKind = "mom";
-      } else if (isFiniteNum(flowV)) {
-        chosenY = flowV;
-        chosenKind = "flow";
-      } else if (isFiniteNum(trendV)) {
-        chosenY = trendV;
-        chosenKind = "mom";
-      }
-
-      const spanY = Math.max(1e-9, yRange.y1 - yRange.y0);
       const mouseNdcX = (xPx / Math.max(1, rect.width)) * 2 - 1;
       const mouseNdcY = 1 - (yPx / Math.max(1, rect.height)) * 2;
-      const pointNdcX = ((tt - viewport.fromMs) / spanT) * 2 - 1;
-      const pointNdcY = chosenY == null ? null : ((chosenY - yRange.y0) / spanY) * 2 - 1;
+      const pointNdcX = mouseNdcX;
+      const pointNdcY = mouseNdcY;
 
       setHover({
         xPx,
@@ -804,7 +811,6 @@ export default function ChartGLMetrics({
         mouseNdcY,
         pointNdcX,
         pointNdcY,
-        chosenKind,
       });
     },
     [data, viewport.fromMs, viewport.toMs, yRange.y0, yRange.y1, showFlow, showMom, setViewport]
@@ -921,6 +927,22 @@ export default function ChartGLMetrics({
 
         <div style={{ display: "flex", gap: 4 }}>
           <button
+            onClick={calibrateCenter}
+            disabled={!data?.t?.length}
+            style={{
+              padding: "6px 10px",
+              background: "rgba(0,0,0,.5)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: data?.t?.length ? "#fff" : "rgba(255,255,255,0.3)",
+              borderRadius: 8,
+              fontSize: 11,
+              cursor: data?.t?.length ? "pointer" : "not-allowed",
+            }}
+            title="Center and recalibrate"
+          >
+            Calibrar
+          </button>
+          <button
             onClick={undo}
             disabled={!canUndo}
             style={{
@@ -966,6 +988,21 @@ export default function ChartGLMetrics({
             title="Reset (R or Esc)"
           >
             ↺
+          </button>
+          <button
+            onClick={() => setLiveFollow((v) => !v)}
+            style={{
+              padding: "6px 10px",
+              background: "rgba(0,0,0,.5)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: liveFollow ? "#34d399" : "#fff",
+              borderRadius: 8,
+              fontSize: 11,
+              cursor: "pointer",
+            }}
+            title="Toggle live follow"
+          >
+            LIVE
           </button>
           <button
             onClick={() => setShowShortcuts((v) => !v)}

@@ -485,7 +485,7 @@ export default function SymbolDashboard() {
     run({ silent: false });
     const id = setInterval(() => {
       run({ silent: true });
-    }, 10_000);
+    }, 2_000);
 
     return () => {
       clearInterval(id);
@@ -554,7 +554,7 @@ export default function SymbolDashboard() {
     symbol={symbolUp}
     tf={tf}
     height={520}
-    autoRefreshMs={10_000}
+    autoRefreshMs={2_000}
   />
 </div>
 
