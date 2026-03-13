@@ -960,19 +960,15 @@ html, body {
 
   .mnav__curve {
     position: absolute;
-    top: 2px;
+    top: -1px;
     width: 92px;
     height: 48px;
-    transform: translate(-50%, -56%);
+    transform: translate(-50%, -54%);
     border-radius: 999px 999px 0 0;
-    background:
-      radial-gradient(120% 110% at 50% 22%, rgba(136, 186, 255, 0.30), rgba(136, 186, 255, 0.03) 64%),
-      linear-gradient(180deg, rgba(20, 30, 54, 0.98), rgba(13, 20, 37, 0.98));
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, rgba(13, 19, 35, 0.98), rgba(8, 12, 24, 0.98));
+    border: 0;
     border-bottom: 0;
-    box-shadow:
-      0 8px 24px rgba(8, 14, 27, 0.48),
-      0 0 28px rgba(132, 178, 255, 0.24);
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset;
     transition: left 420ms cubic-bezier(0.2, 0.9, 0.15, 1);
     pointer-events: none;
     z-index: 1;
@@ -1000,19 +996,6 @@ html, body {
     z-index: 2;
   }
 
-  .mnav__btn::before {
-    content: "";
-    position: absolute;
-    inset: 5px 9px 7px;
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
-    opacity: 0;
-    transform: scale(0.94);
-    transition: opacity 220ms ease, transform 300ms cubic-bezier(0.2, 0.9, 0.15, 1);
-    z-index: 0;
-    pointer-events: none;
-  }
-
   .mnav__btn::after {
     content: "";
     position: absolute;
@@ -1033,11 +1016,6 @@ html, body {
     color: #fff;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.32);
     filter: drop-shadow(0 8px 16px rgba(116, 168, 255, 0.30));
-  }
-
-  .mnav__btn.is-active::before {
-    opacity: 1;
-    transform: scale(1);
   }
 
   .mnav__btn.is-active::after {
@@ -1098,7 +1076,6 @@ html, body {
   @media (prefers-reduced-motion: reduce) {
     .mnav__curve,
     .mnav__btn,
-    .mnav__btn::before,
     .mnav__btn::after,
     .mnav__ico,
     .mnav__txt {
