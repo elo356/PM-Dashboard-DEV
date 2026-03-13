@@ -483,7 +483,9 @@ export default function Dashboard() {
     0,
     mobileNavItems.findIndex((item) => item.key === active),
   );
-  const activeMobileCenter = `${((activeMobileIndex + 0.5) / mobileNavItems.length) * 100}%`;
+  const activeMobileCenterRaw = ((activeMobileIndex + 0.5) / mobileNavItems.length) * 100;
+  const activeMobileCenterSafe = Math.max(16, Math.min(84, activeMobileCenterRaw));
+  const activeMobileCenter = `${activeMobileCenterSafe}%`;
 
   return (
     <div className="dash">

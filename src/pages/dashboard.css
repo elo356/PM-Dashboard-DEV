@@ -942,9 +942,7 @@ html, body {
   .mnav__row {
     position: relative;
     pointer-events: auto;
-    background:
-      radial-gradient(120% 180% at 50% 6%, rgba(126, 170, 255, 0.24), rgba(126, 170, 255, 0) 56%),
-      linear-gradient(180deg, rgba(13, 19, 35, 0.98), rgba(8, 12, 24, 0.98));
+    background: linear-gradient(180deg, rgba(13, 19, 35, 0.98), rgba(8, 12, 24, 0.98));
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
       0 -8px 26px rgba(2, 6, 16, 0.52),
@@ -960,15 +958,15 @@ html, body {
 
   .mnav__curve {
     position: absolute;
-    top: -1px;
-    width: 92px;
-    height: 48px;
-    transform: translate(-50%, -54%);
+    top: 0;
+    width: 86px;
+    height: 40px;
+    transform: translate(-50%, -34%);
     border-radius: 999px 999px 0 0;
     background: linear-gradient(180deg, rgba(13, 19, 35, 0.98), rgba(8, 12, 24, 0.98));
     border: 0;
     border-bottom: 0;
-    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
     transition: left 420ms cubic-bezier(0.2, 0.9, 0.15, 1);
     pointer-events: none;
     z-index: 1;
